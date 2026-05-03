@@ -4,6 +4,8 @@ import {
   getAuth,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from "firebase/auth";
 import app from "../../firebase/firebase.init";
 import { useState } from "react";
@@ -35,16 +37,15 @@ const Login = () => {
     }
   };
 
-  const handleGithubSignIn = () => {
-    signInWithPopup(auth, githubProvider)
-      .then((result) => {
-        const loggedInUser = result.user;
-        console.log(loggedInUser);
-        setUser(loggedInUser);
-      })
-      .catch((error) => {
-        console.log("error", error.message);
-      });
+  const handleGithubSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, githubProvider);
+      const loggedInUser = result.user;
+      console.log("User:", loggedInUser);
+      setUser(loggedInUser);
+    } catch (error) {
+      console.error("Error during GitHub sign-in:", error.message);
+    }
   };
 
   const handleSignOut = async () => {
@@ -60,8 +61,36 @@ const Login = () => {
         console.log(result);
         setUser(null);
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log("error", error.message);
+      });
   };
+
+  const handleRegister = async () => {
+  const email = document.querySelector('input[type="email"]').value;
+  const password = document.querySelector('input[type="password"]').value;
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+        const loggedInUser = result.user;
+      console.log(loggedInUser);
+      setUser(loggedInUser);
+  } catch (error) {
+    console.log("error", error.message);
+  }
+};
+
+const handleSignIn = async () => {
+  const email = document.querySelector('input[type="email"]').value;
+  const password = document.querySelector('input[type="password"]').value;
+  try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const loggedInUser = result.user;
+      console.log(loggedInUser);
+      setUser(loggedInUser);
+  } catch (error) {
+    console.log("error", error.message);
+  }
+};
 
   const fetchSecureData = async () => {
     try {
@@ -102,10 +131,21 @@ const Login = () => {
         </>
       ) : (
         <div>
+          <div className="form">
+          <input type="email" placeholder="Email" />
+          <input type="password" placeholder="Password" />
+          </div>
+          <div>
+          <button onClick={handleSignIn}>Login</button>
+          <button onClick={handleRegister}>Register</button>
+          <div>
           <button onClick={handleGoogleSignIn}>Google Login</button>
           <button onClick={handleGithubSignIn}>Github Login</button>
+          </div>
+        </div>
         </div>
       )}
+     
       {user && (
         <div>
           <h3>User: {user.displayName}</h3>
