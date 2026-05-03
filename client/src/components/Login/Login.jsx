@@ -1,5 +1,5 @@
 import {
-  //  GithubAuthProvider,
+  GithubAuthProvider,
   GoogleAuthProvider,
   getAuth,
   signInWithPopup,
@@ -13,7 +13,7 @@ const Login = () => {
 
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
-  // const githubProvider = new GithubAuthProvider();
+  const githubProvider = new GithubAuthProvider();
 
   const handleGoogleSignIn = async () => {
     try {
@@ -35,17 +35,17 @@ const Login = () => {
     }
   };
 
-  // const handleGithubSignIn = () => {
-  //   signInWithPopup(auth, githubProvider)
-  //     .then((result) => {
-  //       const loggedInUser = result.user;
-  //       console.log(loggedInUser);
-  //       setUser(loggedInUser);
-  //     })
-  //     .catch((error) => {
-  //       console.log("error", error.message);
-  //     });
-  // };
+  const handleGithubSignIn = () => {
+    signInWithPopup(auth, githubProvider)
+      .then((result) => {
+        const loggedInUser = result.user;
+        console.log(loggedInUser);
+        setUser(loggedInUser);
+      })
+      .catch((error) => {
+        console.log("error", error.message);
+      });
+  };
 
   const handleSignOut = async () => {
     try {
@@ -103,7 +103,7 @@ const Login = () => {
       ) : (
         <div>
           <button onClick={handleGoogleSignIn}>Google Login</button>
-          {/* <button onClick={handleGithubSignIn}>Github Login</button> */}
+          <button onClick={handleGithubSignIn}>Github Login</button>
         </div>
       )}
       {user && (
